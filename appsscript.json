@@ -1,5 +1,5 @@
 {
-  "timeZone": "America/Los_Angeles",
+  "timeZone": "Etc/GMT",
   "oauthScopes": [
     "https://www.googleapis.com/auth/spreadsheets"
   ],
