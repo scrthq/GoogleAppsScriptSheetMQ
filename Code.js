@@ -1,7 +1,11 @@
-/**
- * Get the current Sheet details
+/** 
+ * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
  */
+VERIFICATION_TOKEN = '';
 
+/**
+ * Get the current Sheet details and format Sheet as needed
+ */
 Logger.log("Getting Spreadsheet");
 ss = SpreadsheetApp.getActiveSpreadsheet();
 sheet = ss.getSheetByName("Queue");
@@ -91,14 +95,41 @@ function cleanupSheet() {
 /**
  * Responds to a MESSAGE event in Hangouts Chat.
  *
+ * If the message text is 'validate Sheets MQ',
+ * runs a configuration validation test and returns results.
+ * 
  * @param {Object} event the event object from Hangouts Chat
  */
 function onMessage(event) {
-  var idRange = tracker.getRange(2, 1);
-  var nextId = idRange.getValue() + 1;
-  idRange.setValue(nextId);
-  sheet.appendRow([nextId, JSON.stringify(event), "No", "onMessage"]);
-  Logger.log(event);
+  if (/^(validate Sheets MQ)$/i.test(event.message.text)) {
+    var response = ''
+    response += '*Sheets MQ Validation Results:*\n```\n';
+    if (VERIFICATION_TOKEN === event.token) {
+      response += 'Sheets MQ is configured correctly!';
+    }
+    else if (VERIFICATION_TOKEN === '') {
+      response += 'VERIFICATION TOKEN MISSING FROM APPS SCRIPT';
+    }
+    else {
+      response += 'VERIFICATION TOKEN [' + VERIFICATION_TOKEN + '] DOES NOT MATCH EVENT TOKEN [' + event.token + ']';
+    }
+    response += '\n```';
+    return { "text": response };
+  }
+  else {
+    if (VERIFICATION_TOKEN === event.token) {
+      Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
+      var idRange = tracker.getRange(2, 1);
+      var nextId = idRange.getValue() + 1;
+      idRange.setValue(nextId);
+      sheet.appendRow([nextId, JSON.stringify(event), "No", "onMessage"]);
+      Logger.log(event);
+    }
+    else {
+      Logger.log("Event token does not match deployment token! Skipping event.");
+      Logger.log(event);
+    }
+  }
 }
 
 /**
@@ -107,11 +138,18 @@ function onMessage(event) {
  * @param {Object} event the event object from Hangouts Chat
  */
 function onCardClick(event) {
-  var idRange = tracker.getRange(2, 1);
-  var nextId = idRange.getValue() + 1;
-  idRange.setValue(nextId);
-  sheet.appendRow([nextId, JSON.stringify(event), "No", "onCardClick"]);
-  Logger.log(event);
+  if (VERIFICATION_TOKEN === event.token) {
+    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
+    var idRange = tracker.getRange(2, 1);
+    var nextId = idRange.getValue() + 1;
+    idRange.setValue(nextId);
+    sheet.appendRow([nextId, JSON.stringify(event), "No", "onCardClick"]);
+    Logger.log(event);
+  }
+  else {
+    Logger.log("Event token does not match deployment token! Skipping event.");
+    Logger.log(event);
+  }
 }
 
 /**
@@ -120,11 +158,18 @@ function onCardClick(event) {
  * @param {Object} event the event object from Hangouts Chat
  */
 function onAddToSpace(event) {
-  var idRange = tracker.getRange(2, 1);
-  var nextId = idRange.getValue() + 1;
-  idRange.setValue(nextId);
-  sheet.appendRow([nextId, JSON.stringify(event), "No", "onAddToSpace"]);
-  Logger.log(event);
+  if (VERIFICATION_TOKEN === event.token) {
+    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
+    var idRange = tracker.getRange(2, 1);
+    var nextId = idRange.getValue() + 1;
+    idRange.setValue(nextId);
+    sheet.appendRow([nextId, JSON.stringify(event), "No", "onAddToSpace"]);
+    Logger.log(event);
+  }
+  else {
+    Logger.log("Event token does not match deployment token! Skipping event.");
+    Logger.log(event);
+  }
 }
 
 /**
@@ -133,9 +178,16 @@ function onAddToSpace(event) {
  * @param {Object} event the event object from Hangouts Chat
  */
 function onRemoveFromSpace(event) {
-  var idRange = tracker.getRange(2, 1);
-  var nextId = idRange.getValue() + 1;
-  idRange.setValue(nextId);
-  sheet.appendRow([nextId, JSON.stringify(event), "No", "onRemoveFromSpace"]);
-  Logger.log(event);
+  if (VERIFICATION_TOKEN === event.token) {
+    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
+    var idRange = tracker.getRange(2, 1);
+    var nextId = idRange.getValue() + 1;
+    idRange.setValue(nextId);
+    sheet.appendRow([nextId, JSON.stringify(event), "No", "onRemoveFromSpace"]);
+    Logger.log(event);
+  }
+  else {
+    Logger.log("Event token does not match deployment token! Skipping event.");
+    Logger.log(event);
+  }
 }

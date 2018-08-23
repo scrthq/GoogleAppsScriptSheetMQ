@@ -2,7 +2,7 @@
 
 Google Apps Script endpoint for Hangouts Chat bot using Sheets as a message queue
 
-This project is primarily geared towards use with PSGSuite and PoshBot in PowerShell to create a bot framework without incurring the extra costs associated with setting up and maintaining a public API endpoint or a Cloud Pub/Sub subscription.
+This project is primarily geared towards use with [PSGSuite](https://github.com/scrthq/PSGSuite) and PoshBot in PowerShell to create a bot framework without incurring the extra costs associated with setting up and maintaining a public API endpoint or a Cloud Pub/Sub subscription.
 
 If you have a different bot framework you'd like to use, this will work fine with it as well, assuming your chosen framework can interact with Google Sheets. Here's a quick overview of the message processing flow once setup:
 
@@ -35,8 +35,14 @@ Bots frameworks integrating with this setup should follow the following workflow
 Here's how to set up Sheets MQ with your own account.
 
 * [1. Add Sheet & Google Apps Script template to your account](#1-add-sheet--google-apps-script-template-to-your-account)
-* [2. Add the `cleanupSheet` trigger to the Apps Script project](#2-add-the-cleanupsheet-trigger-to-the-apps-script-project)
-* [3. Enable Sheets API for the Apps Script project](#3-enable-sheets-api-for-the-apps-script-project)
+* [2. Add the `cleanupSheet` trigger to the Apps Script project to run when the on Sheet change](#2-add-the-cleanupsheet-trigger-to-the-apps-script-project-to-run-when-the-on-sheet-change)
+* [3. Enable the Sheets API for the Apps Script project](#3-enable-the-sheets-api-for-the-apps-script-project)
+* [4. Run the `cleanupSheet` function to prepare the Sheet](#4-run-the-cleanupsheet-function-to-prepare-the-sheet)
+* [5. Enable and Configure the Hangouts Chat API](#5-enable-and-configure-the-hangouts-chat-api)
+    * [Enabling Hangouts Chat API](#enabling-hangouts-chat-api)
+    * [Configuring Hangouts Chat API](#configuring-hangouts-chat-api)
+* [6. Deploy the Apps Script project from the manifest and copy the deployment ID](#6-deploy-the-apps-script-project-from-the-manifest-and-copy-the-deployment-id)
+* [7. Finalize Hangouts Chat configuration](#7-finalize-hangouts-chat-configuration)
 
 ## 1. Add Sheet & Google Apps Script template to your account
 
@@ -59,7 +65,7 @@ If you need or want to do option 2, you'll need to do the following:
 8. Save both the `Code.gs` and `appsscript.json` files in the Script Editor.
 9. Update the Apps Script project name to something meaninful/useful (i.e. `Google Chat Bot - Sheets MQ`), as this will be the name displayed to users in the event that authorization is needed.
 
-## 2. Add the `cleanupSheet` trigger to the Apps Script project
+## 2. Add the `cleanupSheet` trigger to the Apps Script project to run when the on Sheet change
 
 If you copied the Sheet using the template link during the previous step, open the Script Editor by selecting `Tools > Script Editor` from the menu bar on top of the Sheet.
 
@@ -78,7 +84,7 @@ With the Script Editor now open, you'll need to add 1 trigger to the project so 
 6. Choose your Google account that owns the Sheet.
 7. Click the `Allow` button to allow this Apps Script project to manage the Message Queue Sheet for you.
 
-## 3. Enable Sheets API for the Apps Script project
+## 3. Enable the Sheets API for the Apps Script project
 
 Once you have the Sheet and Apps Script project code set up, you'll need to enable the Sheets API on the Apps Script project from the Google API Console:
 
@@ -88,3 +94,73 @@ Once you have the Sheet and Apps Script project code set up, you'll need to enab
 4. Search for `Sheets` and click the `Google Sheets API` to open it.
 5. Click the blue `Enable` button to enable the Sheets API for your Apps Script project. You should be taken back to the API Dashboard once enabled.
 6. You can close this tab and ignore the "you may need credentials" warning on top of the page as they are not needed for this project.
+
+## 4. Run the `cleanupSheet` function to prepare the Sheet
+
+This step will ensure that your Sheet is ready to start acting as your Chat Bot Message Queue. If you copied the Sheet using the template link during [Step 1](#1-add-sheet--google-apps-script-template-to-your-account), you can skip to [Step 5](#5-enable-and-configure-the-hangouts-chat-api).
+
+1. Open the Script Editor from the Sheet.
+2. In the Script Editor's menu, select `Run > Run function > cleanupSheet`.
+
+## 5. Enable and Configure the Hangouts Chat API
+
+In order to have your bot send messages and events to Sheets MQ via Apps Script, you need to enable and configure the Hangouts Chat API in the [Developer's Console](https://console.developers.google.com/) in the project that your bot framework's service account is in. If you are using [PSGSuite](https://github.com/scrthq/PSGSuite), for example, this would be the project where you created the P12 Key and Service Account that [PSGSuite](https://github.com/scrthq/PSGSuite) is configured with.
+
+### Enabling Hangouts Chat API
+
+1. Open the [Developer's Console](https://console.developers.google.com/).
+2. Select the blue link to `Enable APIs and Services`.
+3. Search for `Hangouts Chat API`, then click the Hangouts Chat API from the search results to open.
+4. Click the blue `Enable` button to enable the API for your project.
+5. You should not be taken to the dashboard with the Hangouts Chat API focused.
+
+### Configuring Hangouts Chat API
+
+1. If you have the Hangouts Chat API dashboard open, click the `Configuration` tab, otherwise open the API Dashboard for your project and click the settings gear on the right side of the Hangouts Chat API row.
+2. Choose your bot status from the following options:
+    * LIVE - available to all users (recommended)
+    * DISABLED
+3. Enter a name for your bot in the `Bot name` field.
+4. Enter a URL for your bot's avatar. I use this one personally: http://helpdev.com.br/wp-content/uploads/2016/11/gson.png
+5. Enter a description for your bot.
+6. Check the boxes under `Functionality` where you want your bot to be available:
+    * [] Bot works in rooms
+    * [] Bot works in direct messages
+7. Copy the token shown under the `Verification token` section to your clipboard.
+
+Stop here, open a new tab and navigate back to the Script Editor from the Google Sheet.
+
+## 6. Deploy the Apps Script project from the manifest and copy the deployment ID
+
+> This is necessary to create the `Deployment ID` needed to use as the Apps Script endpoint when configuring the Hangouts Chat API later on. You **cannot** use the `Latest Version (Head)` deployment ID for this and the Hangouts Chat API configuration will return an error if you try to do so.
+
+To deploy from manifest, open the Script Editor and...
+
+1. Open the `Code.gs` file.
+2. Paste the verification token copied from the Hangouts Chat API configuration page between the two single quotes on line 4 to set the value for the `VERIFICATION_TOKEN` variable. The top of your `Code.gs` file should look similar to this:  
+```javascript
+/** 
+ * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
+ */
+VERIFICATION_TOKEN = 'IZGllk234LK30SllZa1Xum9lmY0308J1NBgzs3YkU=';
+```
+3. Select `Publish > Deploy from manifest...` from the Script Editor menu.
+4. Click the red `Create` button.
+5. Enter a useful name in the `Deployment name` field. If you'd like to enter a description for the deployment version, you can do so but it is not necessary.
+6. Click the blue `Save` button to deploy your project. You will be returned to the Deployments list.
+7. Next to your new deployment, click the `Get ID` link.
+8. Copy the full `Deployment ID` shown to your clipboard and switch back to the Hangouts Chat API configuration page in the Developer's Console.
+
+## 7. Finalize Hangouts Chat configuration
+
+Now that you have your Apps Script deployed from the manifest and the `Deployment ID` on your clipboard, you can finalize the Hangouts Chat API configuration:
+
+1. Under `Connection settings`, select the radio button next to `Apps Script project`
+2. Paste your `Deployment ID` in the field below the selection.
+3. Choose `Who can install` according to your preferences. This will determine who can add the bot to Spaces within Google Chat or send it Direct Messages.
+4. Click the blue `Save changes` button
+5. Done!
+
+***
+
+If you are a [PSGSuite](https://github.com/scrthq/PSGSuite) user and are working on configuring the `PoshBot.GChat.Backend`, follow this link to view the documentation on getting PoshBot set up with Google Chat!
