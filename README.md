@@ -123,9 +123,9 @@ In order to have your bot send messages and events to Sheets MQ via Apps Script,
 3. Enter a name for your bot in the `Bot name` field.
 4. Enter a URL for your bot's avatar. I use this one personally: http://helpdev.com.br/wp-content/uploads/2016/11/gson.png
 5. Enter a description for your bot.
-6. Check the boxes under `Functionality` where you want your bot to be available:
-    * [] Bot works in rooms
-    * [] Bot works in direct messages
+6. Check the boxes under `Functionality` where you want your bot to be available:  
+    * [x] Bot works in rooms  
+    * [x] Bot works in direct messages
 7. Copy the token shown under the `Verification token` section to your clipboard.
 
 Stop here, open a new tab and navigate back to the Script Editor from the Google Sheet.
