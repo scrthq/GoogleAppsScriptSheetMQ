@@ -14,8 +14,7 @@ if (!sheet) {
   Logger.log("Queue sheet not found! Creating...");
   ss.insertSheet("Queue", 0);
   sheet = ss.getSheetByName("Queue");
-  sheet.deleteRows(2, (sheet.getMaxRows() - 2));
-  sheet.deleteColumns(5, (sheet.getMaxColumns() - 4));
+  sheet.deleteRows(2, (sheet.getMaxRows() - 2)).deleteColumns(5, (sheet.getMaxColumns() - 4));
 }
 var tracker = ss.getSheetByName("Tracker");
 if (!tracker) {
@@ -24,8 +23,7 @@ if (!tracker) {
   tracker = ss.getSheetByName("Tracker");
   var trackerRange = tracker.getRange(1, 1, 2);
   trackerRange.setValues([["EventId"],["1"]]);
-  tracker.deleteRows(2, (tracker.getMaxRows() - 2));
-  tracker.deleteColumns(2, (tracker.getMaxColumns() - 1));
+  tracker.deleteRows(2, (tracker.getMaxRows() - 2)).deleteColumns(2, (tracker.getMaxColumns() - 1));
 }
 var sheetOne = ss.getSheetByName("Sheet1");
 if (sheetOne) {
@@ -58,6 +56,9 @@ Logger.log("Setting Sheet tab colors");
 sheet.setTabColor("41f4d9");
 tracker.setTabColor("f4df41");
 
+/**
+ * Cleans up the Sheet and removes any Acked or empty rows
+ */
 function cleanupSheet() {  
   var toDelete = [];
   var rows = sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns()).getValues();
@@ -94,6 +95,28 @@ function cleanupSheet() {
 }
 
 /**
+ * Validates the event.token and adds the event to the message queue
+ *
+ * @param {Object} event the event object from Hangouts Chat
+ * 
+ * @param {String} method the method ran signifying the event
+ */
+function addEventToSheet(event, method) {
+  if (VERIFICATION_TOKEN === event.token) {
+    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
+    var idRange = tracker.getRange(2, 1);
+    var nextId = idRange.getValue() + 1;
+    idRange.setValue(nextId);
+    sheet.appendRow([nextId, JSON.stringify(event), "No", method]);
+    Logger.log(event);
+  }
+  else {
+    Logger.log("Event token does not match deployment token! Skipping event.");
+    Logger.log(event);
+  }
+}
+
+/**
  * Responds to a MESSAGE event in Hangouts Chat.
  *
  * If the message text is 'validate Sheets MQ',
@@ -119,18 +142,7 @@ function onMessage(event) {
     return { "text": response };
   }
   else {
-    if (VERIFICATION_TOKEN === event.token) {
-      Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
-      var idRange = tracker.getRange(2, 1);
-      var nextId = idRange.getValue() + 1;
-      idRange.setValue(nextId);
-      sheet.appendRow([nextId, JSON.stringify(event), "No", "onMessage"]);
-      Logger.log(event);
-    }
-    else {
-      Logger.log("Event token does not match deployment token! Skipping event.");
-      Logger.log(event);
-    }
+    addEventToSheet(event, "onMessage");
   }
 }
 
@@ -140,18 +152,7 @@ function onMessage(event) {
  * @param {Object} event the event object from Hangouts Chat
  */
 function onCardClick(event) {
-  if (VERIFICATION_TOKEN === event.token) {
-    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
-    var idRange = tracker.getRange(2, 1);
-    var nextId = idRange.getValue() + 1;
-    idRange.setValue(nextId);
-    sheet.appendRow([nextId, JSON.stringify(event), "No", "onCardClick"]);
-    Logger.log(event);
-  }
-  else {
-    Logger.log("Event token does not match deployment token! Skipping event.");
-    Logger.log(event);
-  }
+  addEventToSheet(event, "onCardClick");
 }
 
 /**
@@ -160,18 +161,7 @@ function onCardClick(event) {
  * @param {Object} event the event object from Hangouts Chat
  */
 function onAddToSpace(event) {
-  if (VERIFICATION_TOKEN === event.token) {
-    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
-    var idRange = tracker.getRange(2, 1);
-    var nextId = idRange.getValue() + 1;
-    idRange.setValue(nextId);
-    sheet.appendRow([nextId, JSON.stringify(event), "No", "onAddToSpace"]);
-    Logger.log(event);
-  }
-  else {
-    Logger.log("Event token does not match deployment token! Skipping event.");
-    Logger.log(event);
-  }
+  addEventToSheet(event, "onAddToSpace");
 }
 
 /**
@@ -180,16 +170,5 @@ function onAddToSpace(event) {
  * @param {Object} event the event object from Hangouts Chat
  */
 function onRemoveFromSpace(event) {
-  if (VERIFICATION_TOKEN === event.token) {
-    Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
-    var idRange = tracker.getRange(2, 1);
-    var nextId = idRange.getValue() + 1;
-    idRange.setValue(nextId);
-    sheet.appendRow([nextId, JSON.stringify(event), "No", "onRemoveFromSpace"]);
-    Logger.log(event);
-  }
-  else {
-    Logger.log("Event token does not match deployment token! Skipping event.");
-    Logger.log(event);
-  }
+  addEventToSheet(event, "onRemoveFromSpace");
 }
