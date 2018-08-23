@@ -43,6 +43,7 @@ Here's how to set up Sheets MQ with your own account.
     * [Configuring Hangouts Chat API](#configuring-hangouts-chat-api)
 * [6. Deploy the Apps Script project from the manifest and copy the deployment ID](#6-deploy-the-apps-script-project-from-the-manifest-and-copy-the-deployment-id)
 * [7. Finalize Hangouts Chat configuration](#7-finalize-hangouts-chat-configuration)
+* [8. Validating Configuration](#8-validating-configuration)
 
 ## 1. Add Sheet & Google Apps Script template to your account
 
@@ -163,7 +164,41 @@ Now that you have your Apps Script deployed from the manifest and the `Deploymen
 3. Choose `Who can install` according to your preferences. This will determine who can add the bot to Spaces within Google Chat or send it Direct Messages.
 4. Click the blue `Save changes` button.
 
-And that's it!
+## 8. Validating Configuration
+
+To validate that everything is configured correctly, you can do the following:
+
+1. Open a Direct Message with your new bot in Hangouts Chat.
+2. Send the following message: `validate Sheets MQ`
+
+If you do not receive an immediate response, check your Hangouts Chat API configuration for any missing items, otherwise here are the following response messages and what they mean:
+
+### Successful validation <!-- omit in toc -->
+
+**Sheets MQ Validation Results:**
+```
+Sheets MQ is configured correctly!
+```
+
+_You're all set up!_
+
+### Incorrect verification token <!-- omit in toc -->
+
+**Sheets MQ Validation Results:**
+```
+VERIFICATION TOKEN [IZGRsltmB9zJtSjpYySa1Xum9lmY0308J1NBgzs3YkU=] DOES NOT MATCH EVENT TOKEN [IZGllk234LK30SllZa1Xum9lmY0308J1NBgzs3YkU=]
+```
+
+_Make sure you copied the correct token from the Hangouts Chat API configuration page! You will need to create a new deployment once corrected in your `Code.gs` Apps Script file._
+
+### Missing verification token <!-- omit in toc -->
+
+**Sheets MQ Validation Results:**
+```
+VERIFICATION TOKEN MISSING FROM APPS SCRIPT
+```
+
+_Uh oh, the `VERIFICATION_TOKEN` variable is empty in your `Code.gs` file! Make sure you copied the token from the Hangouts Chat API configuration page! You will need to create a new deployment once corrected in your `Code.gs` file._
 
 ***
 

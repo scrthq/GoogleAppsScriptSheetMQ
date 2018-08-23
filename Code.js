@@ -115,6 +115,7 @@ function onMessage(event) {
       response += 'VERIFICATION TOKEN [' + VERIFICATION_TOKEN + '] DOES NOT MATCH EVENT TOKEN [' + event.token + ']';
     }
     response += '\n```';
+    Logger.log(response);
     return { "text": response };
   }
   else {
