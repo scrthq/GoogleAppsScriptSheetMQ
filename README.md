@@ -142,7 +142,10 @@ To deploy from manifest, open the Script Editor and...
 /** 
  * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
  */
-VERIFICATION_TOKEN = 'IZGllk234LK30SllZa1Xum9lmY0308J1NBgzs3YkU=';
+var VERIFICATION_TOKEN = 'IZGllk234LK30SllZa1Xum9lmY0308J1NBgzs3YkU=';
+Logger.log('Verification token: ' + VERIFICATION_TOKEN);
+
+..........
 ```
 3. Select `Publish > Deploy from manifest...` from the Script Editor menu.
 4. Click the red `Create` button.

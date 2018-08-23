@@ -1,2 +1,4 @@
 .clasp.json
 token.js
+.eslintrc.js
+.claspignore

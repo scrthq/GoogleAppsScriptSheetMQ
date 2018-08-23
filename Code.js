@@ -1,14 +1,15 @@
 /** 
  * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
  */
-VERIFICATION_TOKEN = '';
+var VERIFICATION_TOKEN = 'IZGRsltmB9zJtSjpYySa1Xum9lmY0308J1NBgzs3YkU=';
+Logger.log('Verification token: ' + VERIFICATION_TOKEN);
 
 /**
  * Get the current Sheet details and format Sheet as needed
  */
 Logger.log("Getting Spreadsheet");
-ss = SpreadsheetApp.getActiveSpreadsheet();
-sheet = ss.getSheetByName("Queue");
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+var sheet = ss.getSheetByName("Queue");
 if (!sheet) {
   Logger.log("Queue sheet not found! Creating...");
   ss.insertSheet("Queue", 0);
@@ -16,17 +17,17 @@ if (!sheet) {
   sheet.deleteRows(2, (sheet.getMaxRows() - 2));
   sheet.deleteColumns(5, (sheet.getMaxColumns() - 4));
 }
-tracker = ss.getSheetByName("Tracker");
+var tracker = ss.getSheetByName("Tracker");
 if (!tracker) {
   Logger.log("Tracker sheet not found! Creating...");
   ss.insertSheet("Tracker");
   tracker = ss.getSheetByName("Tracker");
-  trackerRange = tracker.getRange(1, 1, 2);
+  var trackerRange = tracker.getRange(1, 1, 2);
   trackerRange.setValues([["EventId"],["1"]]);
   tracker.deleteRows(2, (tracker.getMaxRows() - 2));
   tracker.deleteColumns(2, (tracker.getMaxColumns() - 1));
 }
-sheetOne = ss.getSheetByName("Sheet1");
+var sheetOne = ss.getSheetByName("Sheet1");
 if (sheetOne) {
   Logger.log("Default sheet1 found! Deleting...");
   ss.deleteSheet(sheetOne);
@@ -70,11 +71,11 @@ function cleanupSheet() {
     else if (rows[c][2] == "Yes") {
       Logger.log("Deleting ACKED row: " + (c + 1));
       toDelete.push(rows[c][0]);
-    };
-  };
+    }
+  }
   if (toDelete.length > 0) {
     var deleteCount = 0;
-    var rows = sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns()).getValues();
+    rows = sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns()).getValues();
     for (var i = 0; i < sheet.getMaxRows(); i++) {
       if (rows[i][0] != "Id") {
         for (var d = 0; d < toDelete.length; d++) {
@@ -84,12 +85,12 @@ function cleanupSheet() {
             sheet.deleteRow(rowToDelete);
             deleteCount += 1;
             break;
-          };
-        };
-      };
-    };
+          }
+        }
+      }
+    }
     Logger.log("Cleaned up " + deleteCount + " rows.");
-  };
+  }
 }
 
 /**
