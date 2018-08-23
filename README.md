@@ -1,6 +1,6 @@
 # Google Apps Script Sheet MQ <!-- omit in toc -->
 
-Google Apps Script endpoint for Hangouts Chat bot using Sheets as a message queue
+> _Google Apps Script endpoint for Hangouts Chat bot using Sheets as a message queue_
 
 This project is primarily geared towards use with [PSGSuite](https://github.com/scrthq/PSGSuite) and PoshBot in PowerShell to create a bot framework without incurring the extra costs associated with setting up and maintaining a public API endpoint or a Cloud Pub/Sub subscription.
 
@@ -158,8 +158,9 @@ Now that you have your Apps Script deployed from the manifest and the `Deploymen
 1. Under `Connection settings`, select the radio button next to `Apps Script project`
 2. Paste your `Deployment ID` in the field below the selection.
 3. Choose `Who can install` according to your preferences. This will determine who can add the bot to Spaces within Google Chat or send it Direct Messages.
-4. Click the blue `Save changes` button
-5. Done!
+4. Click the blue `Save changes` button.
+
+And that's it!
 
 ***
 
