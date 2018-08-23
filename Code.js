@@ -1,7 +1,7 @@
 /** 
  * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
  */
-var VERIFICATION_TOKEN = 'IZGRsltmB9zJtSjpYySa1Xum9lmY0308J1NBgzs3YkU=';
+var VERIFICATION_TOKEN = '';
 Logger.log('Verification token: ' + VERIFICATION_TOKEN);
 
 /**
