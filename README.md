@@ -163,4 +163,6 @@ Now that you have your Apps Script deployed from the manifest and the `Deploymen
 
 ***
 
-If you are a [PSGSuite](https://github.com/scrthq/PSGSuite) user and are working on configuring the `PoshBot.GChat.Backend`, follow this link to view the documentation on getting PoshBot set up with Google Chat!
+If you are a [PSGSuite](https://github.com/scrthq/PSGSuite) user and are working on configuring the `PoshBot.GChat.Backend`, follow this link to view the documentation on getting PoshBot set up with Google Chat: 
+
+[scrthq/PoshBot.GChat.Backend](https://github.com/scrthq/PoshBot.GChat.Backend)
