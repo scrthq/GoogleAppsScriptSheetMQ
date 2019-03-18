@@ -165,7 +165,7 @@ To validate that everything is configured correctly, you can do the following:
 2. Send a message.
 3. Verify a response has been recorded in the `Google Apps Script Sheet MQ`
 
-If no response was recorded verify that the correct `Deployment ID` has been associated with your bot during step 7, and that the sheet API is enabled in your project from step 3.
+If no response was recorded verify that the correct `Deployment ID` has been associated with your bot during step 7, and that the Google Sheets API is enabled in your project from step 3.
 
 If you are a [PSGSuite](https://github.com/scrthq/PSGSuite) user and are working on configuring the `PoshBot.GChat.Backend`, follow this link to view the documentation on getting PoshBot set up with Google Chat: 
 
