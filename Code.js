@@ -1,9 +1,3 @@
-/** 
- * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
- */
-var VERIFICATION_TOKEN = '';
-Logger.log('Verification token: ' + VERIFICATION_TOKEN);
-
 /**
  * Get the current Sheet details and format Sheet as needed
  */
@@ -95,56 +89,30 @@ function cleanupSheet() {
 }
 
 /**
- * Validates the event.token and adds the event to the message queue
+ * Adds the event to the message queue
  *
  * @param {Object} event the event object from Hangouts Chat
  * 
  * @param {String} method the method ran signifying the event
  */
 function addEventToSheet(event, method) {
-  if (VERIFICATION_TOKEN === event.token) {
     Logger.log("Event token matches deployment token! Adding event to Sheets MQ");
     var idRange = tracker.getRange(2, 1);
     var nextId = idRange.getValue() + 1;
     idRange.setValue(nextId);
     sheet.appendRow([nextId, JSON.stringify(event), "No", method]);
     Logger.log(event);
-  }
-  else {
-    Logger.log("Event token does not match deployment token! Skipping event.");
-    Logger.log(event);
-  }
 }
 
 /**
  * Responds to a MESSAGE event in Hangouts Chat.
- *
- * If the message text is 'validate Sheets MQ',
- * runs a configuration validation test and returns results.
  * 
  * @param {Object} event the event object from Hangouts Chat
  */
 function onMessage(event) {
-  if (/^(validate Sheets MQ)$/i.test(event.message.text)) {
-    var response = ''
-    response += '*Sheets MQ Validation Results:*\n```\n';
-    if (VERIFICATION_TOKEN === event.token) {
-      response += 'Sheets MQ is configured correctly!';
-    }
-    else if (VERIFICATION_TOKEN === '') {
-      response += 'VERIFICATION TOKEN MISSING FROM APPS SCRIPT';
-    }
-    else {
-      response += 'VERIFICATION TOKEN [' + VERIFICATION_TOKEN + '] DOES NOT MATCH EVENT TOKEN [' + event.token + ']';
-    }
-    response += '\n```';
-    Logger.log(response);
-    return { "text": response };
-  }
-  else {
     addEventToSheet(event, "onMessage");
   }
-}
+
 
 /**
  * Responds to a CARD_CLICKED event in Hangouts Chat.
