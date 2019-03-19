@@ -113,21 +113,18 @@ In order to have your bot send messages and events to Sheets MQ via Apps Script,
 2. Select the blue link to `Enable APIs and Services`.
 3. Search for `Hangouts Chat API`, then click the Hangouts Chat API from the search results to open.
 4. Click the blue `Enable` button to enable the API for your project.
-5. You should not be taken to the dashboard with the Hangouts Chat API focused.
+5. You should now be taken to the dashboard with the Hangouts Chat API focused.
 
 ### Configuring Hangouts Chat API
 
-1. If you have the Hangouts Chat API dashboard open, click the `Configuration` tab, otherwise open the API Dashboard for your project and click the settings gear on the right side of the Hangouts Chat API row.
-2. Choose your bot status from the following options:
-    * LIVE - available to all users (recommended)
-    * DISABLED
-3. Enter a name for your bot in the `Bot name` field.
-4. Enter a URL for your bot's avatar. I use this one personally: http://helpdev.com.br/wp-content/uploads/2016/11/gson.png
-5. Enter a description for your bot.
-6. Check the boxes under `Functionality` where you want your bot to be available:  
+1. If you have the Hangouts Chat API dashboard open, click the `Configuration` tab on the left, otherwise open the API Dashboard for your project and click on `Hangouts Chat API` from the list.
+2. Enter a name for your bot in the `Bot name` field.
+3. Enter a URL for your bot's avatar. I use this one personally: http://helpdev.com.br/wp-content/uploads/2016/11/gson.png
+4. Enter a description for your bot.
+5. Check the boxes under `Functionality` where you want your bot to be available:  
     * [x] Bot works in rooms  
     * [x] Bot works in direct messages
-7. Copy the token shown under the `Verification token` section to your clipboard.
+6. Select "Apps Script Project" from `Connection Settings`
 
 Stop here, open a new tab and navigate back to the Script Editor from the Google Sheet.
 
@@ -138,22 +135,12 @@ Stop here, open a new tab and navigate back to the Script Editor from the Google
 To deploy from manifest, open the Script Editor and...
 
 1. Open the `Code.gs` file.
-2. Paste the verification token copied from the Hangouts Chat API configuration page between the two single quotes on line 4 to set the value for the `VERIFICATION_TOKEN` variable. The top of your `Code.gs` file should look similar to this:  
-```javascript
-/** 
- * IMPORTANT: Add the verification token from your Hangouts Chat API configuration page once generated.
- */
-var VERIFICATION_TOKEN = 'IZGllk234LK30SllZa1Xum9lmY0308J1NBgzs3YkU=';
-Logger.log('Verification token: ' + VERIFICATION_TOKEN);
-
-..........
-```
-3. Select `Publish > Deploy from manifest...` from the Script Editor menu.
-4. Click the red `Create` button.
-5. Enter a useful name in the `Deployment name` field. If you'd like to enter a description for the deployment version, you can do so but it is not necessary.
-6. Click the blue `Save` button to deploy your project. You will be returned to the Deployments list.
-7. Next to your new deployment, click the `Get ID` link.
-8. Copy the full `Deployment ID` shown to your clipboard and switch back to the Hangouts Chat API configuration page in the Developer's Console.
+2. Select `Publish > Deploy from manifest...` from the Script Editor menu.
+3. Click the red `Create` button.
+4. Enter a useful name in the `Deployment name` field. If you'd like to enter a description for the deployment version, you can do so but it is not necessary.
+5. Click the blue `Save` button to deploy your project. You will be returned to the Deployments list.
+6. Next to your new deployment, click the `Get ID` link.
+7. Copy the full `Deployment ID` shown to your clipboard and switch back to the Hangouts Chat API configuration page in the Developer's Console.
 
 ## 7. Finalize Hangouts Chat configuration
 
@@ -161,46 +148,24 @@ Now that you have your Apps Script deployed from the manifest and the `Deploymen
 
 1. Under `Connection settings`, select the radio button next to `Apps Script project`
 2. Paste your `Deployment ID` in the field below the selection.
-3. Choose `Who can install` according to your preferences. This will determine who can add the bot to Spaces within Google Chat or send it Direct Messages.
+3. Choose `Who can install` according to your preferences. This will determine who can add the bot to Spaces within Google Chat or send it Direct Messages. You can limit it to yourself for testing.
 4. Click the blue `Save changes` button.
+
+You will then be able to choose your bot status from the following options:
+    * LIVE - available to all users (recommended/default)
+    * DISABLED
+    
+This setting is restricted by the `Who can Install` permissions.
 
 ## 8. Validating Configuration
 
 To validate that everything is configured correctly, you can do the following:
 
 1. Open a Direct Message with your new bot in Hangouts Chat.
-2. Send the following message: `validate Sheets MQ`
+2. Send a message.
+3. Verify a response has been recorded in the `Google Apps Script Sheet MQ`
 
-If you do not receive an immediate response, check your Hangouts Chat API configuration for any missing items, otherwise here are the following response messages and what they mean:
-
-### Successful validation <!-- omit in toc -->
-
-**Sheets MQ Validation Results:**
-```
-Sheets MQ is configured correctly!
-```
-
-_You're all set up!_
-
-### Incorrect verification token <!-- omit in toc -->
-
-**Sheets MQ Validation Results:**
-```
-VERIFICATION TOKEN [IZGRsltmB9zJtSjpYySa1Xum9lmY0308J1NBgzs3YkU=] DOES NOT MATCH EVENT TOKEN [IZGllk234LK30SllZa1Xum9lmY0308J1NBgzs3YkU=]
-```
-
-_Make sure you copied the correct token from the Hangouts Chat API configuration page! You will need to create a new deployment once corrected in your `Code.gs` Apps Script file._
-
-### Missing verification token <!-- omit in toc -->
-
-**Sheets MQ Validation Results:**
-```
-VERIFICATION TOKEN MISSING FROM APPS SCRIPT
-```
-
-_Uh oh, the `VERIFICATION_TOKEN` variable is empty in your `Code.gs` file! Make sure you copied the token from the Hangouts Chat API configuration page! You will need to create a new deployment once corrected in your `Code.gs` file._
-
-***
+If no response was recorded verify that the correct `Deployment ID` has been associated with your bot during step 7, and that the Google Sheets API is enabled in your project from step 3.
 
 If you are a [PSGSuite](https://github.com/scrthq/PSGSuite) user and are working on configuring the `PoshBot.GChat.Backend`, follow this link to view the documentation on getting PoshBot set up with Google Chat: 
 
